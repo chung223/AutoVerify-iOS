@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AutoVerify</title>
+<style>
+  :root{ color-scheme:light dark; --bg:#fff; --fg:#111; --mut:#777; --line:#e3e3e6; --card:#f7f7f9; --hi:#0a84ff; }
+  @media (prefers-color-scheme:dark){ :root{ --bg:#1c1c1e; --fg:#f2f2f7; --mut:#98989f; --line:#38383a; --card:#2c2c2e; } }
+  *{box-sizing:border-box}
+  body{margin:0;padding:14px;width:290px;font:15px/1.45 -apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg);color:var(--fg)}
+  header{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+  header img{width:30px;height:30px;border-radius:7px}
+  header h1{font-size:16px;margin:0;font-weight:650}
+  header .v{font-size:11px;color:var(--mut)}
+  .row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:var(--card);border-radius:10px;margin-bottom:8px}
+  .row .lbl{font-size:14px}
+  .row .sub{font-size:11.5px;color:var(--mut);margin-top:2px}
+  /* iOS 風格開關 */
+  .sw{position:relative;width:47px;height:28px;flex:none}
+  .sw input{opacity:0;width:0;height:0;position:absolute}
+  .sw span{position:absolute;inset:0;background:#78788033;border-radius:99px;transition:.22s;cursor:pointer}
+  .sw span::before{content:"";position:absolute;width:24px;height:24px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.22s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+  .sw input:checked + span{background:#30d158}
+  .sw input:checked + span::before{transform:translateX(19px)}
+  .host{font:12px/1.4 ui-monospace,Menlo,monospace;color:var(--mut);word-break:break-all}
+  button{width:100%;font:600 15px -apple-system,sans-serif;padding:11px;border-radius:10px;border:0;background:var(--hi);color:#fff;margin-top:6px}
+  button:active{opacity:.7}
+  button.ghost{background:#8883;color:var(--fg)}
+  button.mini{width:auto;flex:none;margin:0;padding:6px 12px;font-size:13px;background:#ff3b30}
+  .note{font-size:11.5px;color:var(--mut);margin-top:12px;line-height:1.5;border-top:1px solid var(--line);padding-top:10px}
+  .stat{font-size:12px;color:var(--mut);margin-top:8px}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#8e8e93;margin-right:5px;vertical-align:1px}
+  .dot.on{background:#30d158}
+</style>
+</head>
+<body>
+
+<header>
+  <img src="images/icon-128.png" alt="">
+  <div>
+    <h1>AutoVerify</h1>
+    <!-- id="build" 的內容由 resign.sh 在每次建置時蓋上時間戳，用來辨認手機上裝的是哪一版 -->
+    <div class="v">1.0.0 · <span id="build">建置 09-15 00:36</span></div>
+  </div>
+</header>
+
+<div class="row">
+  <div>
+    <div class="lbl">啟用</div>
+    <div class="sub">全域開關</div>
+  </div>
+  <label class="sw"><input type="checkbox" id="enabled"><span></span></label>
+</div>
+
+<div class="row">
+  <div>
+    <div class="lbl">在這個網站啟用</div>
+    <div class="sub host" id="host">—</div>
+  </div>
+  <label class="sw"><input type="checkbox" id="site"><span></span></label>
+</div>
+
+<div class="row">
+  <div>
+    <div class="lbl">只輸出英數字</div>
+    <div class="sub">濾掉模型偶爾吐出的中文字</div>
+  </div>
+  <label class="sw"><input type="checkbox" id="ascii"><span></span></label>
+</div>
+
+<div class="row">
+  <div>
+    <div class="lbl">長度不符就不填</div>
+    <div class="sub">依輸入框的 maxlength 判斷，可擋掉約 8 成錯誤</div>
+  </div>
+  <label class="sw"><input type="checkbox" id="lenchk"><span></span></label>
+</div>
+
+<div class="row" id="rulerow" hidden>
+  <div>
+    <div class="lbl">已手動指定位置</div>
+    <div class="sub">這個網站會跳過自動偵測</div>
+  </div>
+  <button class="mini" id="clearrule">清除</button>
+</div>
+
+<button id="pick">指定驗證碼位置</button>
+<button id="rescan" class="ghost">重新掃描這一頁</button>
+
+<div class="stat"><span class="dot" id="dot"></span><span id="stat">尚未載入模型</span></div>
+
+<div class="note">
+  辨識在你的裝置上完成，圖片不會離開手機。<br>
+  首次在一頁遇到驗證碼時要花約 4 秒載入模型，之後每張約 1 秒。
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+# Xcode 個人狀態
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
+.build/
+
+# macOS
+.DS_Store
+
+# 我自己的備份檔
+*.bak
+*.bak-*
+
+# 本機部署工具：內含裝置 UDID 與個人路徑，不入庫
+resign.sh
+resign.log
+
+# 簽署資產，永遠不要入庫
+*.mobileprovision
+*.p12
+*.cer
+*.certSigningRequest
